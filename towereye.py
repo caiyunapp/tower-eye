@@ -6,8 +6,10 @@ import cv2
 import requests
 import matplotlib.pyplot as plt
 
+CONFIG_FP = os.path.join(os.path.dirname(__file__), "config.json")
 
-def get_config(config_fp="./config.json"):
+
+def get_config(config_fp=CONFIG_FP):
     with open(config_fp) as f:
         config = json.load(f)
 
@@ -35,7 +37,7 @@ def get_subimage_clarity(image_fp, threshold=250):
         return False
 
 
-def analysis_image_clarity(image_fp, threshold=250, tmpdir="./tmp", keep_tmp=False):
+def analysis_visibility(image_fp, threshold=250, tmpdir="./tmp", keep_tmp=False):
     config = get_config()
     visibles = []
     for key, value in config.items():
@@ -62,6 +64,6 @@ if __name__ == "__main__":
         with open(image_fp, "wb") as f:
             f.write(resp.content)
 
-    clarity = analysis_image_clarity(image_fp)
+    visibility = analysis_visibility(image_fp)
 
-    print(f"基于 IAP 铁塔照片反算当前北京市的能见度为 {clarity} km")
+    print(f"基于 IAP 铁塔照片反算当前北京市的能见度为 {visibility} km")
