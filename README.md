@@ -52,3 +52,30 @@ print(f"基于 IAP 铁塔照片反算当前北京市的能见度为 {visibility}
 
 
 大道至简，顶级的算法只需要最朴素的处理方式 🤫
+
+## 不同能见度的识别效果
+我们可以测试一下在不同能见度下 tower-eye 的识别效果，首先是高能见度：
+![Clear](./data/clear.jpg)
+
+图片存储位置：`./data/clear.jpg`
+
+测试代码：
+```python
+from towereye import analysis_visibility
+image_fp = "./data/clear.jpg"  # 替换为你下载的 IAP 铁塔的照片（须为东北方向）
+visibility = analysis_visibility(image_fp)
+print(f"基于 {image_fp} 识别的能见度为 {visibility} km")
+```
+返回的结果：
+```
+基于 ./data/clear.jpg 识别的能见度为 19.0 km
+```
+
+我们再测试一下大雾天气下的识别结果：
+![Fog](./data/fog.jpg)
+图片存储位置：`./data/fog.jpg`
+
+将代码中的路径修改为大雾图片的路径后，识别的结果为：
+```
+基于 ./data/fog.jpg 识别的能见度为 2.0 km
+```
