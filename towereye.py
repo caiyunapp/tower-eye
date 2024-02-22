@@ -5,6 +5,7 @@ import shutil
 import cv2
 import requests
 import matplotlib.pyplot as plt
+from skimage.color import rgb2gray
 
 CONFIG_FP = os.path.join(os.path.dirname(__file__), "config.json")
 
@@ -25,8 +26,11 @@ def crop_image(x1, y1, x2, y2, image_path, output_path):
     cv2.imwrite(output_path, cropped_img)
 
 
-def get_subimage_clarity(image_fp, threshold=250):
-    image = (plt.imread(image_fp) * 255).astype("uint8")
+def is_clear(image_fp, threshold=250):
+    # 读取图像并转换为灰度图像
+    image = rgb2gray(plt.imread(image_fp))
+    # 将图像的数据类型转换为uint8，并将其范围缩放到0-255
+    image = (image * 255).astype("uint8")
     std = image.std()
     span = image.max() - image.min()
 
@@ -46,9 +50,10 @@ def analysis_visibility(image_fp, threshold=250, tmpdir="./tmp", keep_tmp=False)
         savefp = os.path.join(tmpdir, f"{key}.jpg")
         os.makedirs(tmpdir, exist_ok=True)
         crop_image(x1, y1, x2, y2, image_fp, savefp)
-        if get_subimage_clarity(savefp, threshold):
+        if is_clear(savefp, threshold):
             visibles.append(distance)
-
+    if not visibles:
+        return 0
     if not keep_tmp:
         shutil.rmtree(tmpdir)
 
